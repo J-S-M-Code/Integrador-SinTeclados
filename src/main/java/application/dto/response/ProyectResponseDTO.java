@@ -1,4 +1,4 @@
 package application.dto.response;
 
-public class ProjectResponseDTO {
+public class ProyectResponseDTO {
 }
