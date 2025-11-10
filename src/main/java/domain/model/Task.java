@@ -15,16 +15,16 @@ public class Task {
     private LocalDateTime finishedAt;//ready
     private LocalDateTime createdAt;//ready
 
-    public Task(Long id,
+    private Task(Long id,
                 String title,
                 Proyect proyect,
                 Integer estimatedHours,
                 String assignee,
                 TaskStatus status,
-                LocalDateTime finishedAt,
-                LocalDateTime createdAt) {
+                LocalDateTime createdAt,
+                 LocalDateTime finishedAt) {
 
-        this.id = ThreadLocalRandom.current().nextLong();
+        this.id = id;
         this.title = title;
         this.proyect = proyect;
         this.estimatedHours = estimatedHours;
@@ -40,8 +40,8 @@ public class Task {
                               Integer estimatedHours,
                               String assignee,
                               TaskStatus status,
-                              LocalDateTime finishedAt,
-                              LocalDateTime createdAt){
+                              LocalDateTime createdAt,
+                              LocalDateTime finishedAt){
 
         if(title == null || title.isBlank()){
             throw new BusinessRuleViolationsException("El titulo de la tarea no puede estar vacio");
