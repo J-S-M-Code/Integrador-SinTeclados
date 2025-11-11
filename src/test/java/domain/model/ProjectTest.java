@@ -13,14 +13,12 @@ public class ProjectTest {
     @Test
     @DisplayName("Debe crear un Proyect exitosamente cuando los datos son válidos")
     void testCreateProyect_ShouldSucceed_WhenDataIsValid() {
-        Long id = 123456789L;
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(10);
         String name = "Proyecto Test";
 
         // 1. Act (Actuar)
-        Project project = Project.create(id,
-                name,
+        Project project = Project.create(name,
                 startDate,
                 endDate,
                 ProjectStatus.PLANNED,
@@ -33,13 +31,11 @@ public class ProjectTest {
         assertEquals(startDate, project.getStartDate());
         assertEquals(endDate, project.getEndDate());
         assertEquals(ProjectStatus.PLANNED, project.getStatus());
-        assertEquals(id, project.getId());
     }
 
     @Test
     @DisplayName("Debe lanzar excepción si endDate es anterior a startDate")
     void testCreateProyect_ShouldThrowException_WhenEndDateIsBeforeStartDate() {
-        Long id = 123456789L;
         String name = "Proyecto Test";
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.minusDays(1); // Fecha inválida
@@ -47,8 +43,7 @@ public class ProjectTest {
         // Act y Assert
         // Verificamos que se lanza la excepción correcta
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
-            Project.create(id,
-                    name,
+            Project.create(name,
                     startDate,
                     endDate,
                     ProjectStatus.PLANNED,
@@ -63,7 +58,6 @@ public class ProjectTest {
     @Test
     @DisplayName("Debe lanzar excepción si endDate es anterior a hoy")
     void testCreateProyect_ShouldThrowException_WhenEndDateIsInThePast() {
-        Long id = 123456789L;
         String name = "Proyecto Test";
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(-10);//Fecha invalida
@@ -72,8 +66,7 @@ public class ProjectTest {
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
             // Usamos 'startDate' Y endDate para que pase la primera validación
             // pero falle la segunda (endDate >= startDate)
-            Project.create(id,
-                    name,
+            Project.create(name,
                     startDate,
                     endDate,
                     ProjectStatus.PLANNED,
@@ -87,14 +80,12 @@ public class ProjectTest {
     @Test
     @DisplayName("Debe lanzar excepción si falta un campo requerido (ej: name es null)")
     void testCreateProyect_ShouldThrowException_WhenNameIsNull() {
-        Long id = 123456789L;
         String name = null;
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(10);
         // Act y Assert
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
-            Project.create(id,
-                    name,
+            Project.create(name,
                     startDate,
                     endDate,
                     ProjectStatus.PLANNED,
@@ -108,14 +99,12 @@ public class ProjectTest {
     @Test
     @DisplayName("canAddTask debe devolver true si el estado NO es CLOSED")
     void testCanAddTask_ShouldReturnTrue_WhenStatusIsActive() {
-        Long id = 123456789L;
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(10);
         String name = "Proyecto Test";
 
         // Creamos un proyecto válido con estado ACTIVE
-        Project activeProject = Project.create(id,
-                name,
+        Project activeProject = Project.create(name,
                 startDate,
                 endDate,
                 ProjectStatus.ACTIVE,
@@ -129,14 +118,12 @@ public class ProjectTest {
     @Test
     @DisplayName("canAddTask debe devolver false si el estado ES CLOSED")
     void testCanAddTask_ShouldReturnFalse_WhenStatusIsClosed() {
-        Long id = 123456789L;
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(10);
         String name = "Proyecto Test";
 
         // Creamos un proyecto válido con estado CLOSED
-        Project closedProject = Project.create(id,
-                name,
+        Project closedProject = Project.create(name,
                 startDate,
                 endDate,
                 ProjectStatus.CLOSED,

@@ -13,13 +13,12 @@ public class Project {
     private ProjectStatus status;
     private Optional<String> description;
 
-    private Project(Long id,
-                    String name,
+    private Project(String name,
                     LocalDate startDate,
                     LocalDate endDate,
                     ProjectStatus status,
                     Optional<String> description) {
-        this.id = id;
+        this.id = null;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -30,8 +29,7 @@ public class Project {
 
     /**
      *  Utiliza Factory Method
-     *  El id no los da la db
-     * @param id
+     *  El id no los da la db, se setea despues
      * @param name
      * @param startDate
      * @param endDate
@@ -39,15 +37,11 @@ public class Project {
      * @param description
      * @return nuevo proyecto
      */
-    public static Project create(Long id,
-                                 String name,
+    public static Project create(String name,
                                  LocalDate startDate,
                                  LocalDate endDate,
                                  ProjectStatus status,
                                  Optional<String> description){
-        if (id == null){
-            throw new BusinessRuleViolationsException("El id nulo");
-        }
         if (name == null || name.isBlank()) {
             throw new BusinessRuleViolationsException("El nombre no puede ser nulo");
         }
@@ -63,7 +57,7 @@ public class Project {
         if (status == null) {
             throw new BusinessRuleViolationsException("El estatus del proyecto no puede ser nulo");
         }
-        return new Project(id, name, startDate, endDate, status, description);
+        return new Project(name, startDate, endDate, status, description);
     }
 
     /**
