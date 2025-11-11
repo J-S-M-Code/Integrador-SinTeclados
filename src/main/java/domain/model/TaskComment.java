@@ -36,7 +36,7 @@ public class TaskComment {
      * @param task La tarea a la que pertenece el comentario (obligatoria)
      * @param text El contenido del comentario (obligatorio)
      * @param author El autor del comentario (obligatorio)
-     * @param clock Un Clock para manejar el tiempo (para 'createdAt')
+     * @param createdAt Un Clock para manejar el tiempo (para 'createdAt')
      * @return una instancia de TaskComment válida.
      * @throws ValidationException si fallan las validaciones de campos.
      */
