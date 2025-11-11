@@ -55,15 +55,51 @@ public class Proyect {
         if (startDate == null || endDate == null) {
             throw new BusinessRuleViolationsException("La fecha de inicio o final final no pueden ser nulas");
         }
+        if (endDate.isBefore(LocalDate.now())){
+            throw new BusinessRuleViolationsException("La fecha de fin es invalida");
+        }
         if (startDate.isAfter(endDate) || startDate.isAfter(LocalDate.now())){
             throw new BusinessRuleViolationsException("La fecha de inicio es invalida");
-        }
-        if (endDate.isAfter(LocalDate.now())){
-            throw new BusinessRuleViolationsException("La fecha de fin es invalida");
         }
         if (status == null) {
             throw new BusinessRuleViolationsException("El estatus del proyecto no puede ser nulo");
         }
         return new Proyect(id, name, startDate, endDate, status, description);
+    }
+
+    /**
+     * Método de comportamiento del dominio.
+     * Verifica la regla: "Cannot add a Task to a Project with status CLOSED"
+     */
+    public boolean canAddTask() {
+        return this.status != ProyectStatus.CLOSED;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public ProyectStatus getStatus() {
+        return status;
+    }
+
+    public Optional<String> getDescription() {
+        return description;
     }
 }
