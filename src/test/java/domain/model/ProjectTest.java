@@ -3,12 +3,15 @@ package domain.model;
 import infrastructure.exception.BusinessRuleViolationsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ProjectTest {
     @Test
     @DisplayName("Debe crear un Proyect exitosamente cuando los datos son válidos")

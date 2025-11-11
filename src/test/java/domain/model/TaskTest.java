@@ -19,8 +19,7 @@ public class TaskTest {
 
     public void OBjetoTaskCompleto() {
         //Creacion de un proyecto para la tarea
-        Project project = Project.create(1234L,
-                "Proyecto Prog Avanz",
+        Project project = Project.create("Proyecto Prog Avanz",
                 LocalDate.of(2025, 10, 11),
                 LocalDate.of(2025, 10, 30),
                 ProjectStatus.PLANNED,
