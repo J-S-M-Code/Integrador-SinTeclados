@@ -4,22 +4,21 @@ import infrastructure.exception.BusinessRuleViolationsException;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
-public class Proyect {
+public class Project {
     private Long id;
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
-    private ProyectStatus status;
+    private ProjectStatus status;
     private Optional<String> description;
 
-    private Proyect(Long id,
-                     String name,
-                     LocalDate startDate,
-                     LocalDate endDate,
-                     ProyectStatus status,
-                     Optional<String> description) {
+    private Project(Long id,
+                    String name,
+                    LocalDate startDate,
+                    LocalDate endDate,
+                    ProjectStatus status,
+                    Optional<String> description) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -40,11 +39,11 @@ public class Proyect {
      * @param description
      * @return nuevo proyecto
      */
-    public static Proyect create(Long id,
+    public static Project create(Long id,
                                  String name,
                                  LocalDate startDate,
                                  LocalDate endDate,
-                                 ProyectStatus status,
+                                 ProjectStatus status,
                                  Optional<String> description){
         if (id == null){
             throw new BusinessRuleViolationsException("El id nulo");
@@ -64,7 +63,7 @@ public class Proyect {
         if (status == null) {
             throw new BusinessRuleViolationsException("El estatus del proyecto no puede ser nulo");
         }
-        return new Proyect(id, name, startDate, endDate, status, description);
+        return new Project(id, name, startDate, endDate, status, description);
     }
 
     /**
@@ -72,7 +71,7 @@ public class Proyect {
      * Verifica la regla: "Cannot add a Task to a Project with status CLOSED"
      */
     public boolean canAddTask() {
-        return this.status != ProyectStatus.CLOSED;
+        return this.status != ProjectStatus.CLOSED;
     }
 
     public void setId(Long id) {
@@ -95,7 +94,7 @@ public class Proyect {
         return endDate;
     }
 
-    public ProyectStatus getStatus() {
+    public ProjectStatus getStatus() {
         return status;
     }
 

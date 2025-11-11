@@ -1,9 +1,5 @@
-package model.integradorsinteclados;
+package domain.model;
 
-import domain.model.Proyect;
-import domain.model.ProyectStatus;
-import domain.model.Task;
-import domain.model.TaskStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -23,11 +19,11 @@ public class TaskTest {
 
     public void OBjetoTaskCompleto() {
         //Creacion de un proyecto para la tarea
-        Proyect proyect = Proyect.create(1234L,
+        Project project = Project.create(1234L,
                 "Proyecto Prog Avanz",
                 LocalDate.of(2025, 10, 11),
                 LocalDate.of(2025, 10, 30),
-                ProyectStatus.PLANNED,
+                ProjectStatus.PLANNED,
                 Optional.empty());
 
         //Crear fecha de inicio
@@ -45,7 +41,7 @@ public class TaskTest {
         //Crear Objeto Tarea
         Task task = Task.create(null,
                 "Prog II: implement",
-                proyect,
+                project,
                 15,
                 "Joaquin del Canto",
                 TaskStatus.TODO,
@@ -57,7 +53,7 @@ public class TaskTest {
         assertNull(task.getId(), "El id debe ser nulo antes de guardarse");
 
         assertEquals("Prog II: implement", task.getTitle());
-        assertEquals(proyect, task.getProyect(), "El proyecto asignado no es el correcto");        assertEquals(15, task.getEstimatedHours());
+        assertEquals(project, task.getProyect(), "El proyecto asignado no es el correcto");        assertEquals(15, task.getEstimatedHours());
         assertEquals(15, task.getEstimatedHours());
         assertEquals("Joaquin del Canto", task.getAssignee());
         assertEquals(TaskStatus.TODO, task.getStatus());
