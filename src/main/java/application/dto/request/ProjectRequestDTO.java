@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record ProjectRequestDTO(
-    @NotBlank(message = "Name should not be empty.")
+    @NotBlank(message = "El nombre es requerido")
     String name,
-    @NotNull(message = "")
+    @NotNull(message = "La fecha de inicio es requerida")
     LocalDate startDate,
     @NotNull(message = "La fecha de fin es requerida")
     @FutureOrPresent(message = "La fecha de fin debe ser hoy o en el futuro")
