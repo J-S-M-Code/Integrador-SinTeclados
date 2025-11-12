@@ -1,7 +1,7 @@
 package model.integradorsinteclados;
 
-import domain.model.Proyect;
-import static domain.model.ProyectStatus.*;
+import domain.model.Project;
+import static domain.model.ProjectStatus.*;
 import domain.model.Task;
 import static domain.model.TaskStatus.*;
 import domain.model.TaskComment;
@@ -22,14 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class TaskCommentTest {
 
-    private final Long testId = 1L;
-
     private final LocalDateTime fixedTime1 = LocalDateTime.of(2025, 11, 11, 12, 0, 0);
     private final LocalDateTime fixedTime2 = LocalDateTime.of(2025, 12, 11, 12, 0, 0);
     private final LocalDate fixedTime3 = LocalDate.of(2025, 11, 12);
     private final LocalDate fixedTime4 = LocalDate.of(2025, 12, 12);
 
-    private final Proyect testProject = Proyect.create(10L, "testName", fixedTime3, fixedTime4, ACTIVE, "".describeConstable());
+    private final Project testProject = Project.create("testName", fixedTime3, fixedTime4, ACTIVE, "".describeConstable());
 
     private final Task testTask = Task.create(11L, "testTask", testProject, 10, "Pepe Botellas", TODO, fixedTime1, fixedTime2);
 
@@ -43,7 +41,7 @@ public class TaskCommentTest {
     @DisplayName("Debería crear un TaskComment exitosamente con datos válidos")
     void createTaskComment_WithValidData_ShouldSucceed() {
         // Act
-        TaskComment comment = TaskComment.create(testId, testTask, validText, validAuthor, fixedTime1);
+        TaskComment comment = TaskComment.create(testTask, validText, validAuthor, fixedTime1);
 
         // Assert
         assertNotNull(comment);
@@ -58,7 +56,7 @@ public class TaskCommentTest {
     void createTaskComment_WithNullTask_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId,null, validText, validAuthor, fixedTime1);
+            TaskComment.create(null, validText, validAuthor, fixedTime1);
         });
 
         assertEquals("Comment should be associated to a Task.", exception.getMessage());
@@ -69,7 +67,7 @@ public class TaskCommentTest {
     void createTaskComment_WithNullText_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId, testTask, null, validAuthor, fixedTime1);
+            TaskComment.create(testTask, null, validAuthor, fixedTime1);
         });
 
         assertEquals("Comment should have text.", exception.getMessage());
@@ -80,7 +78,7 @@ public class TaskCommentTest {
     void createTaskComment_WithEmptyText_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId, testTask, "", validAuthor, fixedTime1);
+            TaskComment.create(testTask, "", validAuthor, fixedTime1);
         });
 
         assertEquals("Comment should have text.", exception.getMessage());
@@ -91,7 +89,7 @@ public class TaskCommentTest {
     void createTaskComment_WithBlankText_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId, testTask, "   ", validAuthor, fixedTime1);
+            TaskComment.create(testTask, "   ", validAuthor, fixedTime1);
         });
 
         assertEquals("Comment should have text.", exception.getMessage());
@@ -102,7 +100,7 @@ public class TaskCommentTest {
     void createTaskComment_WithNullAuthor_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId, testTask, validText, null, fixedTime1);
+            TaskComment.create(testTask, validText, null, fixedTime1);
         });
 
         assertEquals("Comment should have an author.", exception.getMessage());
@@ -113,7 +111,7 @@ public class TaskCommentTest {
     void createTaskComment_WithEmptyAuthor_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId, testTask, validText, "", fixedTime1);
+            TaskComment.create(testTask, validText, "", fixedTime1);
         });
 
         assertEquals("Comment should have an author.", exception.getMessage());
@@ -124,7 +122,7 @@ public class TaskCommentTest {
     void createTaskComment_WithBlankAuthor_ShouldThrowValidationException() {
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            TaskComment.create(testId, testTask, validText, "   ", fixedTime1);
+            TaskComment.create(testTask, validText, "   ", fixedTime1);
         });
 
         assertEquals("Comment should have an author.", exception.getMessage());

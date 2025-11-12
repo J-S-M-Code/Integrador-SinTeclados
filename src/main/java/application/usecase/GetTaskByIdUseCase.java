@@ -1,5 +1,6 @@
 package application.usecase;
 
+import application.mapper.TaskCommentMapper;
 import infrastructure.exception.ResourceNotFoundException;
 import domain.model.Task;
 import domain.model.TaskComment;
@@ -8,12 +9,12 @@ import domain.repository.TaskRepository;
 
 import java.util.List;
 
-public class GestTaskByIdUseCase {
+public class GetTaskByIdUseCase {
 
     private final TaskRepository taskRepository;
     private final TaskCommentRepository commentRepository;
 
-    public GestTaskByIdUseCase(TaskRepository taskRepository, TaskCommentRepository commentRepository) {
+    public GetTaskByIdUseCase(TaskRepository taskRepository, TaskCommentRepository commentRepository, TaskCommentMapper commentMapper) {
         this.taskRepository = taskRepository;
         this.commentRepository = commentRepository;
     }
@@ -26,11 +27,10 @@ public class GestTaskByIdUseCase {
      * @throws ResourceNotFoundException si la tarea no existe.
      */
     public Task execute(Long taskId, boolean withComments) {
-        // 1. Buscar la tarea
+
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
 
-        // 2. Si se solicitan, cargar los comentarios
         if (withComments) {
             List<TaskComment> comments = commentRepository.findAllByTaskId(taskId);
         }
