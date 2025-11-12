@@ -66,7 +66,7 @@ public class CreateProjectTest {
         // Entidad a guardar (lo que nos da el repo con el id)
         savedProject = Project.create(
                 requestDTO.name(),
-                requestDTO.startDate(),
+                requestDTO.startDate(),                                                                                                                                                                                                                                                                                                                                                 
                 requestDTO.endDate(),
                 requestDTO.status(),
                 Optional.ofNullable(requestDTO.description())
