@@ -1,6 +1,6 @@
 package domain.model;
 
-public enum ProyectStatus {
+public enum ProjectStatus {
     PLANNED,
     ACTIVE,
     CLOSED

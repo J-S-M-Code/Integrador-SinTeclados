@@ -1,4 +1,4 @@
 package infrastructure.controller;
 
-public class TaskCOntroller {
+public class TaskController {
 }

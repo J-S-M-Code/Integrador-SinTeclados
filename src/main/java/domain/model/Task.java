@@ -1,14 +1,13 @@
 package domain.model;
 
 import infrastructure.exception.BusinessRuleViolationsException;
-import java.util.concurrent.ThreadLocalRandom;
 
 import java.time.LocalDateTime;
 
 public class Task {
     private Long id;
     private String title;//ready
-    private Proyect proyect;
+    private Project project;
     private Integer estimatedHours;//ready
     private String assignee;//ready
     private TaskStatus status; //ready
@@ -17,7 +16,7 @@ public class Task {
 
     private Task(Long id,
                 String title,
-                Proyect proyect,
+                Project project,
                 Integer estimatedHours,
                 String assignee,
                 TaskStatus status,
@@ -26,7 +25,7 @@ public class Task {
 
         this.id = id;
         this.title = title;
-        this.proyect = proyect;
+        this.project = project;
         this.estimatedHours = estimatedHours;
         this.assignee = assignee;
         this.status = status;
@@ -36,7 +35,7 @@ public class Task {
 
     public static Task create(Long id,
                               String title,
-                              Proyect proyect,
+                              Project project,
                               Integer estimatedHours,
                               String assignee,
                               TaskStatus status,
@@ -79,70 +78,38 @@ public class Task {
             finishedAt = LocalDateTime.now();
         }
 
-        return new Task(id, title, proyect, estimatedHours, assignee, status, createdAt, finishedAt);
+        return new Task(id, title, project, estimatedHours, assignee, status, createdAt, finishedAt);
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Proyect getProyect() {
-        return proyect;
-    }
-
-    public void setProyect(Proyect proyect) {
-        this.proyect = proyect;
+    public Project getProyect() {
+        return project;
     }
 
     public Integer getEstimatedHours() {
         return estimatedHours;
     }
 
-    public void setEstimatedHours(Integer estimatedHours) {
-        this.estimatedHours = estimatedHours;
-    }
-
     public String getAssignee() {
         return assignee;
-    }
-
-    public void setAssignee(String assignee) {
-        this.assignee = assignee;
     }
 
     public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(TaskStatus status) {
-        this.status = status;
-    }
-
     public LocalDateTime getFinishedAt() {
         return finishedAt;
     }
 
-    public void setFinishedAt(LocalDateTime finishedAt) {
-        this.finishedAt = finishedAt;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

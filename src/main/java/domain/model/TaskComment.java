@@ -1,14 +1,10 @@
 package domain.model;
 
+import jakarta.validation.ValidationException;
 
-import infrastructure.exception.ValidationException;
-
-import java.time.Clock;
 import java.time.LocalDateTime;
 
-
 public class TaskComment {
-
     private Long id;
     private Task task;
     private String text;
@@ -23,7 +19,6 @@ public class TaskComment {
         this.createdAt = createdAt;
     }
 
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Task getTask() { return task; }
@@ -35,14 +30,13 @@ public class TaskComment {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-
     /**
      * Factory Method para crear un nuevo Comentario.
      *
      * @param task La tarea a la que pertenece el comentario (obligatoria)
      * @param text El contenido del comentario (obligatorio)
      * @param author El autor del comentario (obligatorio)
-     * @param clock Un Clock para manejar el tiempo (para 'createdAt')
+     * @param createdAt Un Clock para manejar el tiempo (para 'createdAt')
      * @return una instancia de TaskComment válida.
      * @throws ValidationException si fallan las validaciones de campos.
      */
@@ -61,4 +55,7 @@ public class TaskComment {
 
         return comment;
     }
+
+
+
 }

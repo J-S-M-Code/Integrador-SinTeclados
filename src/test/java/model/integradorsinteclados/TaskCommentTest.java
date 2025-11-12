@@ -1,7 +1,7 @@
 package model.integradorsinteclados;
 
-import domain.model.Proyect;
-import static domain.model.ProyectStatus.*;
+import domain.model.Project;
+import static domain.model.ProjectStatus.*;
 import domain.model.Task;
 import static domain.model.TaskStatus.*;
 import domain.model.TaskComment;
@@ -29,7 +29,7 @@ public class TaskCommentTest {
     private final LocalDate fixedTime3 = LocalDate.of(2025, 11, 12);
     private final LocalDate fixedTime4 = LocalDate.of(2025, 12, 12);
 
-    private final Proyect testProject = Proyect.create(10L, "testName", fixedTime3, fixedTime4, ACTIVE, "".describeConstable());
+    private final Project testProject = Project.create("testName", fixedTime3, fixedTime4, ACTIVE, "".describeConstable());
 
     private final Task testTask = Task.create(11L, "testTask", testProject, 10, "Pepe Botellas", TODO, fixedTime1, fixedTime2);
 
