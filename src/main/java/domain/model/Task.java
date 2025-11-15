@@ -21,7 +21,7 @@ public class Task {
                 String assignee,
                 TaskStatus status,
                 LocalDateTime createdAt,
-                 LocalDateTime finishedAt) {
+                LocalDateTime finishedAt) {
 
         this.id = id;
         this.title = title;
