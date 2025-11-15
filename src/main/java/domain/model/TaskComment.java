@@ -11,8 +11,8 @@ public class TaskComment {
     private String author;
     private LocalDateTime createdAt;
 
-    private TaskComment(Long id, Task task, String text, String author, LocalDateTime createdAt) {
-        this.id = id;
+    private TaskComment(Task task, String text, String author, LocalDateTime createdAt) {
+        this.id = null;
         this.task = task;
         this.text = text;
         this.author = author;
@@ -40,7 +40,7 @@ public class TaskComment {
      * @return una instancia de TaskComment válida.
      * @throws ValidationException si fallan las validaciones de campos.
      */
-    public static TaskComment create(Long id, Task task, String text, String author, LocalDateTime createdAt) {
+    public static TaskComment create(Task task, String text, String author, LocalDateTime createdAt) {
         if (task == null) {
             throw new ValidationException("Comment should be associated to a Task.");
         }
@@ -51,7 +51,7 @@ public class TaskComment {
             throw new ValidationException("Comment should have an author.");
         }
 
-        TaskComment comment = new TaskComment(id, task, text, author, createdAt);
+        TaskComment comment = new TaskComment(task, text, author, createdAt);
 
         return comment;
     }

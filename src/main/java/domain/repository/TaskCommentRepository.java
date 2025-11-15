@@ -9,4 +9,6 @@ public interface TaskCommentRepository {
     TaskComment save(TaskComment comment);
 
     List<TaskComment> findAllByTaskId(Long taskId);
+
+    Long getLatestId();
 }
