@@ -35,8 +35,8 @@ public class AddCommentToTaskUseCase {
      */
     public CommentResponseDTO execute(TaskCommentRequestDTO request, Long taskId) {
 
-        Task task = taskRepository.findById(request.task().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+        Task task = taskRepository.findById(request.task().getId()).orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
         /*
         Long id = commentRepository.getLatestId() + 1L;
 

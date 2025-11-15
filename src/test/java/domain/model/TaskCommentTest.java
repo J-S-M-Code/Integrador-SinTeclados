@@ -1,10 +1,8 @@
-package model.integradorsinteclados;
+package domain.model;
 
-import domain.model.Project;
 import static domain.model.ProjectStatus.*;
-import domain.model.Task;
 import static domain.model.TaskStatus.*;
-import domain.model.TaskComment;
+
 import infrastructure.exception.ValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
