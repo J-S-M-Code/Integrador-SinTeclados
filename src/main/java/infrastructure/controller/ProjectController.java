@@ -50,11 +50,11 @@ public class ProjectController {
 
     // --- Endpoints de Comentarios ---
 
+    // projectId no es utilizado, pero es parte de la URL
+
     @PostMapping("/projects/{projectId}/tasks/{taskId}/comments")
     public ResponseEntity<CommentResponseDTO> addCommentToTask(
-            @PathVariable Long projectId, // No se usa, pero es parte de la URL
-            @PathVariable Long taskId,
-            @Valid @RequestBody TaskCommentRequestDTO request) {
+            @PathVariable Long projectId, @PathVariable Long taskId,@Valid @RequestBody TaskCommentRequestDTO request) {
 
         CommentResponseDTO response = addCommentToTaskUseCase.execute(request, taskId);
 
@@ -62,10 +62,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{projectId}/tasks/{taskId}")
-    public ResponseEntity<TaskWithCommentsResponseDTO> getTaskById(
-            @PathVariable Long projectId,
-            @PathVariable Long taskId,
-            @RequestParam(value = "comments", defaultValue = "false") boolean withComments) {
+    public ResponseEntity<TaskWithCommentsResponseDTO> getTaskById(@PathVariable Long projectId,@PathVariable Long taskId, @RequestParam(value = "comments", defaultValue = "false") boolean withComments) {
 
         TaskWithCommentsResponseDTO response = getTaskByIdUseCase.execute(taskId, withComments);
         return ResponseEntity.ok(response);
