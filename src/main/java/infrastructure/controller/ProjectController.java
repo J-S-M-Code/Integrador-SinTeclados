@@ -1,49 +1,61 @@
 package infrastructure.controller;
 
 import application.dto.request.ProjectRequestDTO;
+import application.dto.request.TaskCommentRequestDTO;
+import application.dto.response.CommentResponseDTO;
 import application.dto.response.ProjectResponseDTO;
-import application.usecase.CreateProjectUseCase;
+import application.usecase.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-//A implementar
+// A implementar
 
 @RestController
-@RequestMapping("/projects")
 public class ProjectController {
 
-    // Casos de uso que se van a utilizar para responder a los post y get
-    private final CreateProjectUseCase createProjectUseCase;;
+    private final CreateProjectUseCase createProjectUseCase;
+    private final AddCommentToTaskUseCase addCommentToTaskUseCase;
 
-    // Inyectores de caso de uso por medio del constructor
-    public ProjectController(CreateProjectUseCase createProjectUseCase) {
+    public ProjectController(CreateProjectUseCase createProjectUseCase,
+                                    CreateTaskUseCase createTaskUseCase,
+                                    AddCommentToTaskUseCase addCommentToTaskUseCase,
+                                    GetTaskByIdUseCase getTaskByIdUseCase,
+                                    FindTaskUseCase findTaskUseCase) {
         this.createProjectUseCase = createProjectUseCase;
+        this.addCommentToTaskUseCase = addCommentToTaskUseCase;
     }
 
+    // --- Endpoints de Proyectos ---
+
     /**
-     * Endpoint para la creacion de un nuevo proyect
+     * Endpoint: POST /projects
+     * Crea un nuevo proyecto.
      */
-    @PostMapping
-    public ResponseEntity<ProjectResponseDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO) {
-        // Llamada al caso de uso
-        ProjectResponseDTO responseDTO = createProjectUseCase.execute(projectRequestDTO);
-        // Construimos el URI del nuevo recurso
+    @PostMapping("/projects")
+    public ResponseEntity<ProjectResponseDTO> createProject(@Valid @RequestBody ProjectRequestDTO request) {
+        ProjectResponseDTO response = createProjectUseCase.execute(request);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(responseDTO.id())
+                .buildAndExpand(response.id())
                 .toUri();
-        // Develve un 201 Created con la URL y el DTO de respuesta
-        return ResponseEntity.created(location).body(responseDTO);
+
+        return ResponseEntity.created(location).body(response);
     }
 
+    @PostMapping("/projects/{projectId}/tasks/{taskId}/comments")
+    public ResponseEntity<CommentResponseDTO> addCommentToTask(
+            @PathVariable Long projectId, // No se usa, pero es parte de la URL
+            @PathVariable Long taskId,
+            @Valid @RequestBody TaskCommentRequestDTO request) {
 
+        CommentResponseDTO response = addCommentToTaskUseCase.execute(request, taskId);
 
+        return ResponseEntity.status(201).body(response);
+    }
 }
