@@ -17,7 +17,7 @@ public class AddCommentToTaskUseCase {
     private final TaskRepository taskRepository;
     private final TaskCommentRepository commentRepository;
     private final TaskCommentMapper commentMapper;
-    private final Clock clock;
+    private final Clock clock; // Ahora sí lo vamos a usar
 
     public AddCommentToTaskUseCase(TaskRepository taskRepository, TaskCommentRepository commentRepository, TaskCommentMapper commentMapper, Clock clock) {
         this.taskRepository = taskRepository;
@@ -27,32 +27,29 @@ public class AddCommentToTaskUseCase {
     }
 
     /**
-     * Ejecuta el caso de uso.
-     * @param request El DTO a mapear
-     * @param taskId El ID de la tarea a la que se añade el comentario.
+     * Ejecuta el caso de uso (Versión Mejorada).
+     * @param request El DTO simplificado (solo texto y autor).
+     * @param taskId El ID de la tarea (de la URL), que ahora SÍ se usa.
      * @return El comentario creado.
      * @throws ResourceNotFoundException si la tarea no existe.
      */
     public CommentResponseDTO execute(TaskCommentRequestDTO request, Long taskId) {
 
-        Task task = taskRepository.findById(request.task().getId()).orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
 
-        /*
-        Long id = commentRepository.getLatestId() + 1L;
+        LocalDateTime creationTime = LocalDateTime.now(clock);
 
-        TaskComment comment = TaskComment.create(
-                id,
+        TaskComment newComment = TaskComment.create(
                 task,
-                command.text(),
-                command.author(),
-                LocalDateTime.now(clock)
+                request.text(),
+                request.author(),
+                creationTime
         );
-        */
-        TaskComment comment = commentMapper.toDomain(request);
-        
-        TaskComment saved = commentRepository.save(comment);
-        
+
+        TaskComment saved = commentRepository.save(newComment);
+
         return commentMapper.toResponseDTO(saved);
     }
+
 
 }

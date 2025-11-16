@@ -8,16 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskCommentMapper {
 
-    public TaskComment toDomain(TaskCommentRequestDTO dto){
-        if (dto == null){
-            return null;
-        }
-        return TaskComment.create(dto.task(),
-                dto.text(),
-                dto.author(),
-                dto.createdAt());
-    }
-
     public CommentResponseDTO toResponseDTO(TaskComment taskComment){
         if (taskComment == null) {
             return null;
