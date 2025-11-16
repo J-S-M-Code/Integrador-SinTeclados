@@ -10,8 +10,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ITaskRepository extends JpaRepository<TaskEntity, Long> {
     boolean existsByTitleAndProject(String title, ProjectEntity project);
-
-    //TaskEntity save(TaskEntity entityToSave);
-
-   // Optional<TaskEntity> findById(Long id);
 }

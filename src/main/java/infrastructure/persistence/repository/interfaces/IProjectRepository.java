@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IProjectRepository extends JpaRepository<ProjectEntity, Long> {
     boolean existsByName(String name);
-
-    ProjectEntity save(ProjectEntity entityToSave);
 }

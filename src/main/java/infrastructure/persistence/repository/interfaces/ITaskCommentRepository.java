@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface ITaskCommentRepository extends JpaRepository<TaskCommentEntity, Long> {
     List<TaskCommentEntity> findAllByTaskId(Long taskId);
-
-    //TaskCommentEntity save(TaskCommentEntity entityToSave);
 }
