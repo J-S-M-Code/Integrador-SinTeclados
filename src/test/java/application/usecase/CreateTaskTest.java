@@ -69,7 +69,7 @@ public class CreateTaskTest {
         // 3. Crear el TaskRequestDTO (de entrada)
         LocalDateTime finishDate = LocalDateTime.now().plusMinutes(1);
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Hacer el testing del CU", parentProject, 8, "Analista QA",
+                null, "Hacer el testing del CU", parentProject, "Analista QA", 8,
                 TaskStatus.TODO, finishDate, now
         );
 
@@ -127,7 +127,7 @@ public class CreateTaskTest {
         );
 
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Test", null, 1, "Test", TaskStatus.TODO, null, null
+                null, "Test", null, "Test", 8, TaskStatus.TODO, null, null
         );
 
         // comportamiento: el proyecto NO existe
@@ -157,7 +157,7 @@ public class CreateTaskTest {
                 "Proyecto Cerrado", null, null, ProjectStatus.CLOSED, null
         );
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Test", null, 1, "Test", TaskStatus.TODO, null, null
+                null, "Test", null, "Test", 8, TaskStatus.TODO, null, null
         );
 
         // Definimos el comportamiento: el proyecto SÍ existe
@@ -188,7 +188,7 @@ public class CreateTaskTest {
         );
 
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Tarea Duplicada", parentProject, 8, "QA",
+                null, "Tarea Duplicada", parentProject, "QA", 8,
                 TaskStatus.TODO, null, LocalDateTime.now()
         );
 
