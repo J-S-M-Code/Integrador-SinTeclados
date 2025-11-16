@@ -3,7 +3,6 @@ package domain.repository;
 import domain.model.Project;
 import domain.model.Task;
 
-import java.lang.ScopedValue;
 import java.util.Optional;
 
 public interface TaskRepository {

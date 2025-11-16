@@ -11,7 +11,9 @@ import domain.repository.TaskRepository;
 import infrastructure.exception.BusinessRuleViolationsException;
 import infrastructure.exception.DuplicateResourceException;
 import infrastructure.exception.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CreateTaskUseCase {
     /**
      * El caso de uso hace:
