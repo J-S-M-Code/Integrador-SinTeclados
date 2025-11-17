@@ -1,5 +1,7 @@
 package application.usecase;
 
-public class FindTaskUseCase {
+import org.springframework.stereotype.Service;
 
+@Service
+public class FindTaskUseCase {
 }
