@@ -30,4 +30,8 @@ public class FindTaskUseCase {
                 .map(taskMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
+import org.springframework.stereotype.Service;
+
+@Service
+public class FindTaskUseCase {
 }

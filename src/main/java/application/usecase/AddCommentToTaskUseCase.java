@@ -8,10 +8,12 @@ import domain.model.Task;
 import domain.model.TaskComment;
 import domain.repository.TaskCommentRepository;
 import domain.repository.TaskRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 
+@Service
 public class AddCommentToTaskUseCase {
 
     private final TaskRepository taskRepository;
