@@ -2,6 +2,7 @@ package infrastructure.controller;
 
 import application.dto.request.ProjectRequestDTO;
 import application.dto.request.TaskCommentRequestDTO;
+import application.dto.request.TaskRequestDTO;
 import application.dto.response.CommentResponseDTO;
 import application.dto.response.ProjectResponseDTO;
 import application.dto.response.TaskResponseDTO;
@@ -28,12 +29,18 @@ public class ProjectController {
     private final FindTaskUseCase findTaskUseCase;
     private final AddCommentToTaskUseCase addCommentToTaskUseCase;
     private final GetTaskByIdUseCase getTaskByIdUseCase;
+    private final CreateTaskUseCase createTaskUseCase;
 
-    public ProjectController(CreateProjectUseCase createProjectUseCase, GetTaskByIdUseCase getTaskByIdUseCase, AddCommentToTaskUseCase addCommentToTaskUseCase, FindTaskUseCase findTaskUseCase) {
+    public ProjectController(CreateProjectUseCase createProjectUseCase,
+                             GetTaskByIdUseCase getTaskByIdUseCase,
+                             AddCommentToTaskUseCase addCommentToTaskUseCase,
+                             FindTaskUseCase findTaskUseCase,
+                             CreateTaskUseCase createTaskUseCase) {
         this.createProjectUseCase = createProjectUseCase;
         this.addCommentToTaskUseCase = addCommentToTaskUseCase;
         this.findTaskUseCase = findTaskUseCase;
         this.getTaskByIdUseCase = getTaskByIdUseCase;
+        this.createTaskUseCase = createTaskUseCase;
     }
 
     // --- Endpoints de Proyectos ---
@@ -54,6 +61,33 @@ public class ProjectController {
 
         return ResponseEntity.created(location).body(response);
     }
+
+    // -- Endpoints de Task (tareas del proyecto)
+
+    /**
+     *
+     * POST /projects/{projectId}/tasks
+     *Recibe el ID del proyecto en la URL y los datos de la tarea en el Body.
+     *
+     */
+
+    @PostMapping("/projects/{projectId}/tasks")
+    public ResponseEntity<TaskResponseDTO> createTask(
+            @PathVariable Long projectId, //obtengo el id de project desde la url
+            @Valid  @RequestBody TaskRequestDTO request
+    ) {
+        // Llamamos al caso de uso pasando el ID y el DTO
+        TaskResponseDTO response = createTaskUseCase.execute(projectId, request);
+        // Creamos la URI del recurso creado (ej: /projects/1/tasks/50)
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{taskId}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
+
+    }
+
 
     // --- Endpoints de Comentarios ---
 

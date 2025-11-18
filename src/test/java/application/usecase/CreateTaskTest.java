@@ -69,7 +69,7 @@ public class CreateTaskTest {
         // 3. Crear el TaskRequestDTO (de entrada)
         LocalDateTime finishDate = LocalDateTime.now().plusMinutes(1);
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Hacer el testing del CU", parentProject, "Analista QA", 8,
+                null, "Hacer el testing del CU", 8, "Analista QA",
                 TaskStatus.TODO, finishDate, now
         );
 
@@ -96,13 +96,14 @@ public class CreateTaskTest {
 
         // 7. Definir el comportamiento
         when(projectRepository.existsByName(projectRequestDTO.name())).thenReturn(true);
-        when(taskRepository.existByTitleAndProject(taskRequestDTO.title(), taskRequestDTO.project())).thenReturn(false);
-        when(taskMapper.toDomain(taskRequestDTO)).thenReturn(taskToSave);
+        // En lugar de taskRequestDTO.project(), pasamos parentProject
+        when(taskRepository.existByTitleAndProject(taskRequestDTO.title(), parentProject)).thenReturn(false);
+        when(taskMapper.toDomain(taskRequestDTO, parentProject)).thenReturn(taskToSave);
         when(taskRepository.save(any(Task.class))).thenReturn(savedTask);
         when(taskMapper.toResponseDTO(savedTask)).thenReturn(expectedResponse);
 
 
-        TaskResponseDTO actualResponse = createTaskUseCase.execute(projectRequestDTO, taskRequestDTO);
+        TaskResponseDTO actualResponse = createTaskUseCase.execute(1L, taskRequestDTO);
 
         Assertions.assertNotNull(actualResponse);
         Assertions.assertEquals(expectedResponse.id(), actualResponse.id());
@@ -111,8 +112,8 @@ public class CreateTaskTest {
 
         // Verificamos que se llamó a cada método en el orden correcto
         verify(projectRepository).existsByName(projectRequestDTO.name());
-        verify(taskRepository).existByTitleAndProject(taskRequestDTO.title(), taskRequestDTO.project());
-        verify(taskMapper).toDomain(taskRequestDTO);
+        verify(taskRepository).existByTitleAndProject(taskRequestDTO.title(), parentProject);
+        verify(taskMapper).toDomain(taskRequestDTO, parentProject);
         verify(taskRepository).save(taskToSave);
         verify(taskMapper).toResponseDTO(savedTask);
     }
@@ -127,14 +128,14 @@ public class CreateTaskTest {
         );
 
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Test", null, "Test", 8, TaskStatus.TODO, null, null
+                null, "Test", 8, "Test", TaskStatus.TODO, LocalDateTime.now().plusDays(1), LocalDateTime.now()
         );
 
         // comportamiento: el proyecto NO existe
         when(projectRepository.existsByName(projectRequestDTO.name())).thenReturn(false);
 
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
-            createTaskUseCase.execute(projectRequestDTO, taskRequestDTO);
+            createTaskUseCase.execute(1L, taskRequestDTO);
         });
 
 
@@ -144,7 +145,7 @@ public class CreateTaskTest {
         // Verificamos que solo se llamó a la primera validación
         verify(projectRepository).existsByName(projectRequestDTO.name());
         verify(taskRepository, never()).existByTitleAndProject(any(), any());
-        verify(taskMapper, never()).toDomain(any());
+        verify(taskMapper, never()).toDomain(any(), any());
         verify(taskRepository, never()).save(any());
     }
 
@@ -157,14 +158,14 @@ public class CreateTaskTest {
                 "Proyecto Cerrado", null, null, ProjectStatus.CLOSED, null
         );
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Test", null, "Test", 8, TaskStatus.TODO, null, null
+                null, "Test", 8, "Test", TaskStatus.TODO, LocalDateTime.now().plusDays(5), LocalDateTime.now()
         );
 
         // Definimos el comportamiento: el proyecto SÍ existe
         when(projectRepository.existsByName(closedProjectDTO.name())).thenReturn(true);
 
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
-            createTaskUseCase.execute(closedProjectDTO, taskRequestDTO);
+            createTaskUseCase.execute(98L, taskRequestDTO);
         });
 
         String expectedMessage = "No se Puede agregar una tarea a un proyecto Cerrado (CLOSED).";
@@ -177,7 +178,7 @@ public class CreateTaskTest {
 
     @Test
     @Order(4)
-    @DisplayName("Test que lanza una Exception si el titlo de la tarea ya esta duplicado")
+    @DisplayName("Test que lanza una Exception si el titulo de la tarea ya esta duplicado")
     void testCrearTask_DeberiaLanzarDuplicateResourceException_CuandoElTituloDeLaTareaEstaDuplicado() {
         Project parentProject = mock(Project.class);
         when(parentProject.getName()).thenReturn("Proyecto Padre");
@@ -188,7 +189,7 @@ public class CreateTaskTest {
         );
 
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO(
-                null, "Tarea Duplicada", parentProject, "QA", 8,
+                null, "Tarea Duplicada", 8, "QA",
                 TaskStatus.TODO, null, LocalDateTime.now()
         );
 
@@ -196,18 +197,18 @@ public class CreateTaskTest {
         // 1. El proyecto SÍ existe
         when(projectRepository.existsByName(projectRequestDTO.name())).thenReturn(true);
         // 2. La tarea SÍ existe (devuelve true)
-        when(taskRepository.existByTitleAndProject(taskRequestDTO.title(), taskRequestDTO.project())).thenReturn(true);
+        when(taskRepository.existByTitleAndProject(taskRequestDTO.title(), parentProject)).thenReturn(true);
 
         Exception exception = assertThrows(DuplicateResourceException.class, () -> {
-            createTaskUseCase.execute(projectRequestDTO, taskRequestDTO);
+            createTaskUseCase.execute(98L, taskRequestDTO);
         });
 
         String expectedMessage = "Ya existe una tarea con el mismo titulo.";
         Assertions.assertEquals(expectedMessage, exception.getMessage());
 
         verify(projectRepository).existsByName(projectRequestDTO.name());
-        verify(taskRepository).existByTitleAndProject(taskRequestDTO.title(), taskRequestDTO.project());
-        verify(taskMapper, never()).toDomain(any());
+        verify(taskRepository).existByTitleAndProject(taskRequestDTO.title(), parentProject);
+        verify(taskMapper, never()).toDomain(any(), any());
         verify(taskRepository, never()).save(any());
     }
 
