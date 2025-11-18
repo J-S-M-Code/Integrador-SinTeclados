@@ -10,7 +10,6 @@ import domain.repository.TaskCommentRepository;
 import domain.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 
 @Service
@@ -19,17 +18,15 @@ public class AddCommentToTaskUseCase {
     private final TaskRepository taskRepository;
     private final TaskCommentRepository commentRepository;
     private final TaskCommentMapper commentMapper;
-    private final Clock clock; // Ahora sí lo vamos a usar
 
-    public AddCommentToTaskUseCase(TaskRepository taskRepository, TaskCommentRepository commentRepository, TaskCommentMapper commentMapper, Clock clock) {
+    public AddCommentToTaskUseCase(TaskRepository taskRepository, TaskCommentRepository commentRepository, TaskCommentMapper commentMapper) {
         this.taskRepository = taskRepository;
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
-        this.clock = clock;
     }
 
     /**
-     * Ejecuta el caso de uso (Versión Mejorada).
+     * Ejecuta el caso de uso.
      * @param request El DTO simplificado (solo texto y autor).
      * @param taskId El ID de la tarea (de la URL), que ahora SÍ se usa.
      * @return El comentario creado.
@@ -39,7 +36,7 @@ public class AddCommentToTaskUseCase {
 
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
 
-        LocalDateTime creationTime = LocalDateTime.now(clock);
+        LocalDateTime creationTime = LocalDateTime.now();
 
         TaskComment newComment = TaskComment.create(
                 task,
