@@ -20,8 +20,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
-// A implementar
-
 @RestController
 public class ProjectController {
 
@@ -34,7 +32,7 @@ public class ProjectController {
     public ProjectController(CreateProjectUseCase createProjectUseCase, GetTaskByIdUseCase getTaskByIdUseCase, AddCommentToTaskUseCase addCommentToTaskUseCase, FindTaskUseCase findTaskUseCase) {
         this.createProjectUseCase = createProjectUseCase;
         this.addCommentToTaskUseCase = addCommentToTaskUseCase;
-        this.getTaskByIdUseCase = getTaskByIdUseCase;
+        this.findTaskUseCase = findTaskUseCase;
         this.getTaskByIdUseCase = getTaskByIdUseCase;
     }
 

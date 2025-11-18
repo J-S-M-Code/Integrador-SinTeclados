@@ -36,7 +36,6 @@ public class CreateProjectTest {
     private CreateProjectUseCase useCase;
 
     private ProjectRequestDTO requestDTO;
-    private Project projectToSave;
     private Project savedProject;
     private ProjectResponseDTO expectedResponse;
 
@@ -52,15 +51,6 @@ public class CreateProjectTest {
                 LocalDate.now().plusDays(30), //le damos 30 dias como fecha de fin
                 ProjectStatus.PLANNED,
                 "Proyecto pepe suma importancia"
-        );
-
-        // Entidades del dominio
-        projectToSave = Project.create(
-                requestDTO.name(),
-                requestDTO.startDate(),
-                requestDTO.endDate(),
-                requestDTO.status(),
-                Optional.ofNullable(requestDTO.description())
         );
 
         // Entidad a guardar (lo que nos da el repo con el id)

@@ -18,7 +18,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AddCommentToTaskTest {
+public class AddCommentToTaskPersistenceIntegrationTest {
     @Mock
     private TaskRepository taskRepository;
 
@@ -37,23 +36,12 @@ public class AddCommentToTaskTest {
     @Mock
     private TaskCommentMapper commentMapper;
 
-    @Mock
-    private Clock clock;
-
     @InjectMocks
     private AddCommentToTaskUseCase addCommentToTaskUseCase;
 
     @Captor
     private ArgumentCaptor<TaskComment> commentCaptor;
 
-    private static final LocalDateTime FIXED_NOW = LocalDateTime.of(2025, 11, 15, 21, 30, 0);
-    private static final Clock FIXED_CLOCK = Clock.fixed(FIXED_NOW.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
-
-    @BeforeEach
-    void setUp() {
-        lenient().when(clock.instant()).thenReturn(FIXED_CLOCK.instant());
-        lenient().when(clock.getZone()).thenReturn(FIXED_CLOCK.getZone());
-    }
 
     @Test
     @DisplayName("Shall save a comment if a given task exists")
@@ -70,44 +58,48 @@ public class AddCommentToTaskTest {
         Task mockTaskFound = mock(Task.class);
         //when(mockTaskFound.getId()).thenReturn(taskIdFromUrl);
 
-        TaskComment savedComment = mock(TaskComment.class);
+        TaskComment savedCommentMock = mock(TaskComment.class);
         //when(savedComment.getId()).thenReturn(100L);
 
-        CommentResponseDTO expectedResponse = new CommentResponseDTO(
+        CommentResponseDTO mockResponseDto = new CommentResponseDTO(
                 100L,
                 mockTaskFound,
                 "Test Comment, for a, supposedly, existing Task",
                 "yetanotherauthor",
-                FIXED_NOW
+                LocalDateTime.now() // Esta fecha es solo para el mock
         );
 
         when(taskRepository.findById(taskIdFromUrl)).thenReturn(Optional.of(mockTaskFound));
-
-        when(commentRepository.save(any(TaskComment.class))).thenReturn(savedComment);
-
-        when(commentMapper.toResponseDTO(savedComment)).thenReturn(expectedResponse);
+        when(commentRepository.save(any(TaskComment.class))).thenReturn(savedCommentMock);
+        when(commentMapper.toResponseDTO(savedCommentMock)).thenReturn(mockResponseDto);
 
         // 2. Act
+        LocalDateTime beforeTest = LocalDateTime.now();
         CommentResponseDTO actualResponse = addCommentToTaskUseCase.execute(requestDTO, taskIdFromUrl);
+        LocalDateTime afterTest = LocalDateTime.now();
 
         // 3. Assert
         assertNotNull(actualResponse);
-        assertEquals(expectedResponse.id(), actualResponse.id());
-        assertEquals(expectedResponse.text(), actualResponse.text());
-        assertEquals(expectedResponse.createdAt(), actualResponse.createdAt());
+        assertEquals(mockResponseDto.id(), actualResponse.id());
+        assertEquals(mockResponseDto.text(), actualResponse.text());
+        assertEquals(mockResponseDto.author(), actualResponse.author());
+        assertEquals(mockTaskFound, actualResponse.task());
+
+        assertNotNull(actualResponse.createdAt());
 
         verify(taskRepository).findById(taskIdFromUrl);
-
         verify(commentRepository).save(commentCaptor.capture());
+        verify(commentMapper).toResponseDTO(savedCommentMock);
+
         TaskComment commentToSave = commentCaptor.getValue();
-
-        assertNull(commentToSave.getId(), "ID expected to be null before inyecting");
+        assertNull(commentToSave.getId(), "ID expected to be null before saving");
         assertEquals(mockTaskFound, commentToSave.getTask());
-        assertEquals("Test Comment, for a, supposedly, existing Task", commentToSave.getText()); // El texto correcto
-        assertEquals("yetanotherauthor", commentToSave.getAuthor());
-        assertEquals(FIXED_NOW, commentToSave.getCreatedAt());
+        assertEquals(requestDTO.text(), commentToSave.getText());
+        assertEquals(requestDTO.author(), commentToSave.getAuthor());
 
-        verify(commentMapper).toResponseDTO(savedComment);
+        assertNotNull(commentToSave.getCreatedAt());
+        assertTrue(commentToSave.getCreatedAt().isAfter(beforeTest.minusNanos(1)), "Timestamp should be after the test started");
+        assertTrue(commentToSave.getCreatedAt().isBefore(afterTest.plusNanos(1)), "Timestamp should be before the test finished");
     }
 
     @Test
