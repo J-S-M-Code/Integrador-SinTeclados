@@ -21,6 +21,7 @@ public class FindTaskUseCase {
 
     /**
      * Ejecuta la busqueda para las tareas por un estado determinado
+     *
      * @param status El estado de las tareas que se buscaran
      * @return una lista de TaskResponseDTO
      */
@@ -30,3 +31,4 @@ public class FindTaskUseCase {
                 .map(taskMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
+}

@@ -4,6 +4,7 @@ import application.dto.request.ProjectRequestDTO;
 import application.dto.request.TaskRequestDTO;
 import application.dto.response.TaskResponseDTO;
 import application.mapper.TaskMapper;
+import domain.model.Project;
 import domain.model.ProjectStatus;
 import domain.model.Task;
 import domain.repository.ProjectRepository;
@@ -36,28 +37,35 @@ public class CreateTaskUseCase {
         this.projectRepository = projectRepository;
     }
 
-    public TaskResponseDTO execute(ProjectRequestDTO requestDTO1, TaskRequestDTO requestDTO){
+    // CAMBIO 1: Ahora recibimos el ID del proyecto (de la URL) y el DTO de la tarea
+    public TaskResponseDTO execute(Long projectId, TaskRequestDTO taskDTO) {
 
-        /*1) Validar si existe el proyecto*/
-        if(!projectRepository.existsByName(requestDTO1.name())){
-            throw new ResourceNotFoundException("El proyecto no fue encontrado"+requestDTO1.name());
-        }
-        /*2)  Validar que el proyecto no este cerrado*/
-        if(requestDTO1.status() == ProjectStatus.CLOSED){
-            throw new BusinessRuleViolationsException("No se Puede agregar una tarea a un proyecto Cerrado (CLOSED).");
-        }
-        /*3) Validar si existe la tarea en el proyecto*/
-        if (taskRepository.existByTitleAndProject(requestDTO.title(), requestDTO.project())) {
-            throw new DuplicateResourceException("Ya existe una tarea con el mismo titulo.");
+        /* 1) Buscar el proyecto real en la BD por ID (ya no por nombre desde un DTO) */
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("El proyecto no fue encontrado con id: " + projectId));
+
+        /* 2) Validar que el proyecto (entidad real) no esté cerrado */
+        if (project.getStatus() == ProjectStatus.CLOSED) {
+            throw new BusinessRuleViolationsException("No se puede agregar una tarea a un proyecto Cerrado (CLOSED).");
         }
 
-        Task newTask = taskMapper.toDomain(requestDTO);
+        /* 3) Validar si existe la tarea en el proyecto
+         * NOTA: Usamos 'project' (la entidad que recuperamos arriba)
+         * y taskDTO.title() */
+        if (taskRepository.existByTitleAndProject(taskDTO.title(), project)) {
+            throw new DuplicateResourceException("Ya existe una tarea con el mismo titulo en este proyecto.");
+        }
+
+        /* 4) Mapear a Dominio pasando AMBOS objetos */
+        Task newTask = taskMapper.toDomain(taskDTO, project);
+
+        /* 5) Guardar */
         newTask = taskRepository.save(newTask);
 
+        /* 6) Responder */
         return taskMapper.toResponseDTO(newTask);
     }
-
-
-
-
 }
+
+
+
