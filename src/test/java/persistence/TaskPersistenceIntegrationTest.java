@@ -26,8 +26,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = IntegradorSinTecladosApplication.class)
 @Transactional
@@ -49,12 +47,6 @@ public class TaskPersistenceIntegrationTest {
     @Order(1)
     @DisplayName("Crear una tarea y guardarla")
     void testUseCase_createTaskAndSave(){
-
-        Project parentProject = mock(Project.class);
-        when(parentProject.getId()).thenReturn(1L);
-        when(parentProject.getName()).thenReturn("Proyecto Padre");
-        when(parentProject.getStatus()).thenReturn(ProjectStatus.PLANNED);
-
         requestProject = new ProjectRequestDTO(
                 "Proyecto de Integracion",
                 LocalDate.now(),
@@ -76,9 +68,9 @@ public class TaskPersistenceIntegrationTest {
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
         );
-
+      
         TaskResponseDTO taskResponse = createTaskUseCase.execute(responseProject.id(), requestTask);
-
+      
         assertNotNull(taskResponse);
         assertNotNull(taskResponse.id(), "El id no debe ser nulo");
         assertEquals(requestTask.title(), "Funcionalidad Crear");
@@ -146,9 +138,7 @@ public class TaskPersistenceIntegrationTest {
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
         );
-
-        createTaskUseCase.execute(responseProject.id(), requestTask1);
-
+       createTaskUseCase.execute(responseProject.id(), requestTask1);
        TaskRequestDTO requestTask2 = new TaskRequestDTO(
                 null,
                 "Tarea Repetida",
@@ -162,8 +152,7 @@ public class TaskPersistenceIntegrationTest {
         Exception exception = assertThrows(DuplicateResourceException.class, () -> {
             createTaskUseCase.execute(responseProject.id(), requestTask2);
         });
-
-
+      
         assertEquals("Ya existe una tarea con el mismo titulo en este proyecto.", exception.getMessage());
 
     }
