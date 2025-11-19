@@ -26,6 +26,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = IntegradorSinTecladosApplication.class)
 @Transactional
@@ -47,6 +49,12 @@ public class TaskPersistenceIntegrationTest {
     @Order(1)
     @DisplayName("Crear una tarea y guardarla")
     void testUseCase_createTaskAndSave(){
+
+        Project parentProject = mock(Project.class);
+        when(parentProject.getId()).thenReturn(1L);
+        when(parentProject.getName()).thenReturn("Proyecto Padre");
+        when(parentProject.getStatus()).thenReturn(ProjectStatus.PLANNED);
+
         requestProject = new ProjectRequestDTO(
                 "Proyecto de Integracion",
                 LocalDate.now(),
