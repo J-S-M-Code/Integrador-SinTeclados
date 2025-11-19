@@ -138,8 +138,8 @@ public class CreateTaskTest {
             createTaskUseCase.execute(1L, taskRequestDTO);
         });
 
-
-        String expectedMessage = "El proyecto no fue encontrado" + projectRequestDTO.name();
+        //Compara nombre con id de la excepcion ????
+        String expectedMessage = "El proyecto no fue encontrado " + projectRequestDTO.name();
         Assertions.assertEquals(expectedMessage, exception.getMessage());
 
         // Verificamos que solo se llamó a la primera validación
@@ -149,6 +149,9 @@ public class CreateTaskTest {
         verify(taskRepository, never()).save(any());
     }
 
+
+
+    //Estos dos ultimos no dan en el error que esperas, y tampoco entiendo que preparas con mockito para tener el error
     @Test
     @Order(3)
     @DisplayName("Lanzar una Exception sin el preyoecto se encuentra en estado CERRADO (CLOSED)")
