@@ -132,8 +132,37 @@ Team 6 (Create, Add Comments)
 - GetTaskById with comments
 #### Endpoints:
 - POST /projects
+```json
+{
+"name": "",
+"startDate": "yyyy-mm-dd",
+"endDate": "yyyy-mm-dd",
+"status": "",
+"description": "Migrate and redesign website"
+}
+```
 - POST /projects/{projectId}/tasks
+```json
+{
+  "title": "",
+  "estimatedHours": 0,
+  "assignee": "",
+  "status": "",
+  "finishedAt": "yyyy-mm-ddThh:mm:ss",
+  "createdAt": "yyyy-mm-ddThh:mm:ss"
+}
+```
 - POST /projects/{projectId}/tasks/{taskId}/comments
+```json
+{
+  "text": "",
+  "author": ""
+}
+```
 - GET /tasks?status=IN_PROGRESS
 - GET /projects/{projectId}/tasks/{taskId}?comments=true
 
+Create container docker
+``` cmd
+docker run --name IntegradorPAI -e POSTGRES_DB=sinTecladosDB -e POSTGRES_USER=sinTeclados -e POSTGRES_PASSWORD=sinTeclados -p 5432:5432 -d postgres
+```

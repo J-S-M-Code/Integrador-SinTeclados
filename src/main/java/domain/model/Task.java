@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 
 public class Task {
     private Long id;
-    private String title;//ready
+    private String title;
     private Project project;
-    private Integer estimatedHours;//ready
-    private String assignee;//ready
-    private TaskStatus status; //ready
-    private LocalDateTime finishedAt;//ready
-    private LocalDateTime createdAt;//ready
+    private Integer estimatedHours;
+    private String assignee;
+    private TaskStatus status;
+    private LocalDateTime finishedAt;
+    private LocalDateTime createdAt;
 
     private Task(Long id,
                 String title,
@@ -62,6 +62,12 @@ public class Task {
             throw new BusinessRuleViolationsException("El Estado solo puede ser: IN_PROGESS, DONE, TODO");
         }
 
+        if(status != TaskStatus.DONE){
+            if(finishedAt == null ||  finishedAt.isBefore(LocalDateTime.now())) {
+                throw  new  BusinessRuleViolationsException("La fecha de finalizacion es invalida");
+            }
+        }
+
         if(finishedAt == null ||  finishedAt.isBefore(LocalDateTime.now())) {
             throw  new  BusinessRuleViolationsException("La fecha de finalizacion es invalida");
         }
@@ -72,10 +78,6 @@ public class Task {
 
         if(createdAt.isAfter(finishedAt)){
             throw new BusinessRuleViolationsException("La fecha de inicio no puede ser posterio a fecha de fin");
-        }
-
-        if(status == TaskStatus.DONE){
-            finishedAt = LocalDateTime.now();
         }
 
         return new Task(id, title, project, estimatedHours, assignee, status, createdAt, finishedAt);
