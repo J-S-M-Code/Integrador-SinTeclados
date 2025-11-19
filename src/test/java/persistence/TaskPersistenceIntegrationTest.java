@@ -14,10 +14,8 @@ import domain.repository.ProjectRepository;
 import domain.repository.TaskRepository;
 import infrastructure.exception.BusinessRuleViolationsException;
 import infrastructure.exception.DuplicateResourceException;
-import infrastructure.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import model.integradorsinteclados.IntegradorSinTecladosApplication;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -71,9 +69,9 @@ public class TaskPersistenceIntegrationTest {
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
         );
-
-        TaskResponseDTO taskResponse = createTaskUseCase.execute(requestProject, requestTask);
-
+      
+        TaskResponseDTO taskResponse = createTaskUseCase.execute(responseProject.id(), requestTask);
+      
         assertNotNull(taskResponse);
         assertNotNull(taskResponse.id(), "El id no debe ser nulo");
         assertEquals(requestTask.title(), "Funcionalidad Crear");
@@ -100,19 +98,18 @@ public class TaskPersistenceIntegrationTest {
         TaskRequestDTO requestTask = new TaskRequestDTO(
                 null,
                 "Tarea Fallida",
-                null,
+                12, // estimatedHours (Integer)
                 "Joaquin del canto",
-                12,
                 TaskStatus.TODO,
-                LocalDateTime.now().plusDays(15),
-                LocalDateTime.now().plusMinutes(5)
+                LocalDateTime.now().plusDays(15), // finishedAt (LocalDateTime)
+                LocalDateTime.now().plusMinutes(5) // createdAt (LocalDateTime)
         );
 
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
-            createTaskUseCase.execute(requestProjectCerrado, requestTask);
+            createTaskUseCase.execute(responseProject.id(), requestTask);
         });
 
-        assertEquals("No se Puede agregar una tarea a un proyecto Cerrado (CLOSED).", exception.getMessage());
+        assertEquals("No se puede agregar una tarea a un proyecto Cerrado (CLOSED).", exception.getMessage());
 
     }
 
@@ -143,29 +140,22 @@ public class TaskPersistenceIntegrationTest {
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
         );
-
-        createTaskUseCase.execute(requestProjectPractico, requestTask1);
-
-        TaskRequestDTO requestTask2 = new TaskRequestDTO(
+       createTaskUseCase.execute(responseProject.id(), requestTask1);
+       TaskRequestDTO requestTask2 = new TaskRequestDTO(
                 null,
                 "Tarea Repetida",
-                proyectoGuardado,
+                12, // estimatedHours (Integer)
                 "Joaquin del canto",
-                12,
                 TaskStatus.TODO,
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
         );
 
         Exception exception = assertThrows(DuplicateResourceException.class, () -> {
-            createTaskUseCase.execute(requestProjectPractico, requestTask2);
+            createTaskUseCase.execute(responseProject.id(), requestTask2);
         });
-
-
-        assertEquals("Ya existe una tarea con el mismo titulo.", exception.getMessage());
+      
+        assertEquals("Ya existe una tarea con el mismo titulo en este proyecto.", exception.getMessage());
 
     }
-
-
-
 }

@@ -51,7 +51,7 @@ public class Project {
         if (endDate.isBefore(LocalDate.now())){
             throw new BusinessRuleViolationsException("La fecha de fin es invalida");
         }
-        if (startDate.isAfter(endDate) || startDate.isAfter(LocalDate.now())){
+        if (startDate.isAfter(endDate)){
             throw new BusinessRuleViolationsException("La fecha de inicio es invalida");
         }
         if (status == null) {

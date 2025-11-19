@@ -10,16 +10,13 @@ import domain.repository.TaskCommentRepository;
 import domain.repository.TaskRepository;
 import infrastructure.exception.ResourceNotFoundException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,10 +53,8 @@ public class AddCommentToTaskPersistenceIntegrationTest {
         );
 
         Task mockTaskFound = mock(Task.class);
-        //when(mockTaskFound.getId()).thenReturn(taskIdFromUrl);
 
         TaskComment savedCommentMock = mock(TaskComment.class);
-        //when(savedComment.getId()).thenReturn(100L);
 
         CommentResponseDTO mockResponseDto = new CommentResponseDTO(
                 100L,

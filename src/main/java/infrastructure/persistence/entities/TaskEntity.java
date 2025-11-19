@@ -31,6 +31,7 @@ public class TaskEntity {
     @Column(nullable = false)
     private TaskStatus status;
 
+    @Column(nullable = false)
     private LocalDateTime finishedAt;
 
     @Column(nullable = false)

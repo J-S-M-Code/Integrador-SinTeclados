@@ -96,6 +96,9 @@ public class CreateTaskTest {
         assertEquals("El proyecto no fue encontrado id: " + noExistentId, exception.getMessage());
     }
 
+
+
+    //Estos dos ultimos no dan en el error que esperas, y tampoco entiendo que preparas con mockito para tener el error
     @Test
     @Order(3)
     @DisplayName("Lanzar una Exception sin el preyoecto se encuentra en estado CERRADO (CLOSED)")
