@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class ProjectTest {
     @Test
-    @DisplayName("Debe crear un Proyect exitosamente cuando los datos son válidos")
+    @DisplayName("Debe crear un Proyect exitosamente cuando los datos son validos")
     void testCreateProyect_ShouldSucceed_WhenDataIsValid() {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(10);
@@ -25,7 +25,7 @@ public class ProjectTest {
                 startDate,
                 endDate,
                 ProjectStatus.PLANNED,
-                Optional.of("Descripción de prueba")
+                Optional.of("Descripcion de prueba")
         );
 
         // 2. Assert (Verificar)
@@ -37,20 +37,19 @@ public class ProjectTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción si endDate es anterior a startDate")
+    @DisplayName("Debe lanzar excepcion si endDate es anterior a startDate")
     void testCreateProyect_ShouldThrowException_WhenEndDateIsBeforeStartDate() {
         String name = "Proyecto Test";
         LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.minusDays(1); // Fecha inválida
+        LocalDate endDate = startDate.minusDays(1); // Fecha invalida
 
-        // Act y Assert
         // Verificamos que se lanza la excepción correcta
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
             Project.create(name,
                     startDate,
                     endDate,
                     ProjectStatus.PLANNED,
-                    Optional.of("Descripción de prueba")
+                    Optional.of("Descripcion de prueba")
             );
         });
 
@@ -59,13 +58,12 @@ public class ProjectTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción si endDate es anterior a hoy")
+    @DisplayName("Debe lanzar excepcion si endDate es anterior a hoy")
     void testCreateProyect_ShouldThrowException_WhenEndDateIsInThePast() {
         String name = "Proyecto Test";
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(-10);//Fecha invalida
 
-        // Act y Assert
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
             // Usamos 'startDate' Y endDate para que pase la primera validación
             // pero falle la segunda (endDate >= startDate)
@@ -81,18 +79,18 @@ public class ProjectTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción si falta un campo requerido (ej: name es null)")
+    @DisplayName("Debe lanzar excepcion si falta un campo requerido (ej: name es null)")
     void testCreateProyect_ShouldThrowException_WhenNameIsNull() {
         String name = null;
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(10);
-        // Act y Assert
+
         Exception exception = assertThrows(BusinessRuleViolationsException.class, () -> {
             Project.create(name,
                     startDate,
                     endDate,
                     ProjectStatus.PLANNED,
-                    Optional.of("Descripción de prueba")
+                    Optional.of("Descripcion de prueba")
             );
         });
 
@@ -106,15 +104,14 @@ public class ProjectTest {
         LocalDate endDate = startDate.plusDays(10);
         String name = "Proyecto Test";
 
-        // Creamos un proyecto válido con estado ACTIVE
+        // Creamos un proyecto valido con estado ACTIVE
         Project activeProject = Project.create(name,
                 startDate,
                 endDate,
                 ProjectStatus.ACTIVE,
-                Optional.of("Descripción de prueba")
+                Optional.of("Descripcion de prueba")
         );
 
-        // Assert
         assertTrue(activeProject.canAddTask());
     }
 
@@ -125,15 +122,14 @@ public class ProjectTest {
         LocalDate endDate = startDate.plusDays(10);
         String name = "Proyecto Test";
 
-        // Creamos un proyecto válido con estado CLOSED
+        // Creamos un proyecto valido con estado CLOSED
         Project closedProject = Project.create(name,
                 startDate,
                 endDate,
                 ProjectStatus.CLOSED,
-                Optional.of("Descripción de prueba")
+                Optional.of("Descripcion de prueba")
         );
 
-        // Assert
         assertFalse(closedProject.canAddTask());
     }
 }
