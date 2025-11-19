@@ -62,9 +62,8 @@ public class TaskPersistenceIntegrationTest {
         TaskRequestDTO requestTask = new TaskRequestDTO(
                 null,
                 "Funcionalidad Crear",
-                proyectoGuardado,
-                "Joaquin del canto",
                 12,
+                "Joaquin del canto",
                 TaskStatus.TODO,
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
@@ -133,9 +132,8 @@ public class TaskPersistenceIntegrationTest {
         TaskRequestDTO requestTask1 = new TaskRequestDTO(
                 null,
                 "Tarea Repetida",
-                proyectoGuardado,
-                "Diego del canto",
                 12,
+                "Diego del canto",
                 TaskStatus.TODO,
                 LocalDateTime.now().plusDays(15),
                 LocalDateTime.now().plusMinutes(5)
