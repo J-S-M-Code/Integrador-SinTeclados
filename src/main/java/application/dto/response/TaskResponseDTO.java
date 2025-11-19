@@ -6,6 +6,8 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+
 public record TaskResponseDTO(
         Long id,
         String title,
@@ -15,5 +17,4 @@ public record TaskResponseDTO(
         TaskStatus status,
         LocalDateTime createdAt,
         LocalDateTime finishedAt
-
 ){}
