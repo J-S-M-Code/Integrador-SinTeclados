@@ -63,7 +63,9 @@ public class GetTaskByIdTest {
                 mockTask.getProyect(),
                 8,
                 "Asignado",
-                TaskStatus.TODO
+                TaskStatus.TODO,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(20)
         );
 
 
@@ -72,14 +74,11 @@ public class GetTaskByIdTest {
     @Test
     @DisplayName("Debe devolver la tarea SIN comentarios cuando withComments es false")
     void testExecute_ShouldReturnTask_WithoutComments() {
-        // 1. Arrange
         when(taskMapper.toResponseDTO(mockTask)).thenReturn(mockTaskDTO);
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(mockTask));
 
-        // 2. Act
         TaskWithCommentsResponseDTO result = getTaskByIdUseCase.execute(taskId, false);
 
-        // 3. Assert
         assertNotNull(result);
         assertEquals(taskId, result.id());
         assertEquals("Tarea de Prueba", result.title());
@@ -95,7 +94,6 @@ public class GetTaskByIdTest {
     @Test
     @DisplayName("Debe devolver la tarea CON comentarios cuando withComments es true")
     void testExecute_ShouldReturnTask_WithComments() {
-        // 1. Arrange
         TaskComment mockComment1 = mock(TaskComment.class);
         TaskComment mockComment2 = mock(TaskComment.class);
         List<TaskComment> commentList = Arrays.asList(mockComment1, mockComment2);
@@ -109,10 +107,8 @@ public class GetTaskByIdTest {
         when(commentMapper.toResponseDTO(mockComment1)).thenReturn(mockCommentDTO1);
         when(commentMapper.toResponseDTO(mockComment2)).thenReturn(mockCommentDTO2);
 
-        // 2. Act
         TaskWithCommentsResponseDTO result = getTaskByIdUseCase.execute(taskId, true);
 
-        // 3. Assert
         assertNotNull(result);
         assertEquals(taskId, result.id());
         assertNotNull(result.comments());
@@ -129,15 +125,12 @@ public class GetTaskByIdTest {
     @Test
     @DisplayName("Debe devolver la tarea con lista vacía si withComments es true pero no hay comentarios")
     void testExecute_ShouldReturnTask_WithEmptyCommentList() {
-        // 1. Arrange
         when(taskMapper.toResponseDTO(mockTask)).thenReturn(mockTaskDTO);
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(mockTask));
         when(commentRepository.findAllByTaskId(taskId)).thenReturn(Collections.emptyList());
 
-        // 2. Act
         TaskWithCommentsResponseDTO result = getTaskByIdUseCase.execute(taskId, true);
 
-        // 3. Assert
         assertNotNull(result);
         assertEquals(taskId, result.id());
         assertNotNull(result.comments());
@@ -152,11 +145,9 @@ public class GetTaskByIdTest {
     @Test
     @DisplayName("Debe lanzar ResourceNotFoundException si la tarea no existe")
     void testExecute_ShouldThrowException_WhenTaskNotFound() {
-        // 1. Arrange
         Long invalidTaskId = 99L;
         when(taskRepository.findById(invalidTaskId)).thenReturn(Optional.empty());
 
-        // 2. Act & 3. Assert
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
             getTaskByIdUseCase.execute(invalidTaskId, false);
         });
