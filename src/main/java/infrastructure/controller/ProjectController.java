@@ -21,8 +21,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
-// A implementar
-
 @RestController
 public class ProjectController {
 
@@ -40,6 +38,7 @@ public class ProjectController {
                              CreateTaskUseCase createTaskUseCase) {
         this.createProjectUseCase = createProjectUseCase;
         this.addCommentToTaskUseCase = addCommentToTaskUseCase;
+        this.findTaskUseCase = findTaskUseCase;
         this.getTaskByIdUseCase = getTaskByIdUseCase;
         this.createTaskUseCase = createTaskUseCase;
     }
