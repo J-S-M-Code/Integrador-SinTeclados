@@ -38,7 +38,9 @@ public class TaskMapper {
                 task.getProyect(),
                 task.getEstimatedHours(),
                 task.getAssignee(),
-                task.getStatus()
+                task.getStatus(),
+                task.getCreatedAt(),
+                task.getFinishedAt()
         );
 
 
