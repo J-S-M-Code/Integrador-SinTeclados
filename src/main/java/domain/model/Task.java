@@ -72,7 +72,7 @@ public class Task {
             throw  new  BusinessRuleViolationsException("La fecha de finalizacion es invalida");
         }
 
-        if(createdAt == null || createdAt.isBefore(LocalDateTime.now())) {
+        if(createdAt == null) {
             throw new BusinessRuleViolationsException("La fecha de inicio es invalida");
         }
 
