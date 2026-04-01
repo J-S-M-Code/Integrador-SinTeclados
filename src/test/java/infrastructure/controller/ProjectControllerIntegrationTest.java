@@ -234,7 +234,7 @@ public class ProjectControllerIntegrationTest {
 
         // ACT & ASSERT
         mockMvc.perform(get("/tasks")
-                        .param("status", TaskStatus.IN_PROGRESS.toString()))
+                        .param("status", "IN_PROGRESS"))
                 .andExpect(status().isOk()) // 200 OK
                 .andExpect(jsonPath("$", hasSize(2))) // Espera 2 tareas
                 .andExpect(jsonPath("$[0].title").value("Tarea 1 IP"))
