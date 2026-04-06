@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProjectController {
 
     // Casos de uso que se van a utilizar para responder a los post y get
